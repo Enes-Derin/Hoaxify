@@ -73,6 +73,7 @@ export function SignUp() {
     }
     return "";
   },[password,repeatPassword]);
+  //deneme
 
   return (
     <div className="container mt-4">
@@ -100,7 +101,7 @@ export function SignUp() {
               onChange={(event) => setPassword(event.target.value)}
               type="password"
             />
-            <Input
+            <Input 
               id="repeatPassword"
               label="Repeat Pessword"
               error={passwordRepeatError}
