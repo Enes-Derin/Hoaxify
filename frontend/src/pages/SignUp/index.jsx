@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { signUp } from "./api";
 import { Input } from "./Components/Input";
 
@@ -54,7 +54,8 @@ export function SignUp() {
     } catch (axiosError) {
       if (
         axiosError.response.data &&
-        axiosError.response.data.status == 400
+        axiosError.response.data.status == 400 ||
+        axiosError.response.data.status == 500
       ) {
         console.log(axiosError);
         setErrors(axiosError.response.data.validationErrors);
@@ -65,6 +66,14 @@ export function SignUp() {
       setApiProgress(false);
     }
   };
+
+  const passwordRepeatError = useMemo(()=>{
+    if(password && password != repeatPassword){
+    return "Password Dissmatch";
+    }
+    return "";
+  },[password,repeatPassword]);
+
   return (
     <div className="container mt-4">
       <div className="col-lg-6 offset-lg-3">
@@ -94,7 +103,7 @@ export function SignUp() {
             <Input
               id="repeatPassword"
               label="Repeat Pessword"
-              error={errors.repeatPassword}
+              error={passwordRepeatError}
               onChange={(event) => setRepeatPassword(event.target.value)}
               type="password"
             />

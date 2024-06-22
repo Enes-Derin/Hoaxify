@@ -1,28 +1,31 @@
 package com.hoaxifly.ws.User;
 
+import com.hoaxifly.ws.User.Validation.UniqueEmail;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
-import lombok.Data;
+import jakarta.validation.constraints.*;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = {"email"}))
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     @NotBlank
-    @Size(min = 4, max = 16)
+    @Size(min = 4, max = 255)
     String username;
 
     @NotBlank
     @Email
+    @UniqueEmail
     String email;
 
-    @Size(min = 4, max = 16)
+    @Size(min = 8, max = 255)
+    @Pattern(regexp="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$")
     String password;
 }

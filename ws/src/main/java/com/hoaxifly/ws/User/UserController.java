@@ -38,4 +38,16 @@ public class UserController {
         apiError.setValidationErrors(validationErrors);
             return ResponseEntity.badRequest().body(apiError);
     }
+
+    @ExceptionHandler(NotUniqueEmailException.class)
+    public ResponseEntity<ApiError> notUniqueEmailException(NotUniqueEmailException exception){
+        ApiError apiError = new ApiError();
+        apiError.setPath("/api/v1/users");
+        apiError.setStatus(400);
+        apiError.setMessage(exception.getMessage());
+        Map<String, String> validationErrors = new HashMap<>();
+        validationErrors.put("email", "Email in use");
+        apiError.setValidationErrors(validationErrors);
+        return ResponseEntity.badRequest().body(apiError);
+    }
 }
