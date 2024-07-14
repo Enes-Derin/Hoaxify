@@ -16,9 +16,9 @@ export function SignUp() {
     setErrors(function (lastError) {
       return {
         ...lastError,
-        username: undefined,
+        username: undefined, 
       };
-    });
+    }); 
   }, [username]);
 
   useEffect(() => {
