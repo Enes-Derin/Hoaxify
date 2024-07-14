@@ -16,16 +16,16 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @NotBlank
+    @NotBlank(message = "{hoaxify.constraint.username.notBlank}")
     @Size(min = 4, max = 255)
     String username;
 
     @NotBlank
     @Email
-    @UniqueEmail
+    @UniqueEmail(message = "{hoaxify.constraint.email.uniqueEmail}")
     String email;
 
     @Size(min = 8, max = 255)
-    @Pattern(regexp="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$")
+    @Pattern(regexp="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$", message = "{hoaxify.constraint.password.pattern}")
     String password;
 }

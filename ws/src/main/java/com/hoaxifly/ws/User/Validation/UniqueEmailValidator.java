@@ -1,6 +1,5 @@
 package com.hoaxifly.ws.User.Validation;
 
-import com.hoaxifly.ws.User.NotUniqueEmailException;
 import com.hoaxifly.ws.User.User;
 import com.hoaxifly.ws.User.UserRepository;
 import jakarta.validation.ConstraintValidator;
