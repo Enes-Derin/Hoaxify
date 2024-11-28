@@ -1,6 +1,9 @@
-import axios from "axios";
-import { useState } from "react";
-import { signup } from "./api";
+import { useEffect, useMemo, useState } from "react";
+import { signup } from "./components/api";
+import { Input } from "./components/Input";
+import { useTranslation } from "react-i18next";
+import { Alert } from "../../shared/components/Alert";
+import { Spinner } from "../../shared/components/Spinner";
 
 export function SignUp() {
   const [username, setUsername] = useState();
@@ -11,71 +14,106 @@ export function SignUp() {
   const [apiProgress, setApiProgress] = useState(false);
   //   kullanıcı oluşturuldu mesajı dönmek için
   const [successMessage, setSuccessMessage] = useState();
-  
-  const onSubmit = (event) => {
+  // hata mesajları için
+  const [errors, setErrors] = useState({});
+  // genel hatalar için
+  const [generalError, setGeneralError] = useState();
+  //   dil desteği olan i18n kütüphanesinden gelen fonksiyon. bunu kullanarak metinlerdin dillerini çevirebiliyoruz
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    setErrors(function (lastError) {
+      return {
+        ...lastError,
+        username: undefined,
+      };
+    });
+  }, [username]);
+
+  useEffect(() => {
+    setErrors(function (lastError) {
+      return {
+        ...lastError,
+        email: undefined,
+      };
+    });
+  }, [email]);
+
+  const onSubmit = async (event) => {
     event.preventDefault();
     setApiProgress(true);
     setSuccessMessage();
-    signup(username, email, password)
-      .then((response) => {
-        setSuccessMessage(response.data.message);
-      })
-      .finally(() => setApiProgress(false));
+    setGeneralError();
+    try {
+      const response = await signup({
+        username,
+        email,
+        password,
+      });
+      setSuccessMessage(response.data.message);
+    } catch (axiosError) {
+      if (axiosError.response?.data) {
+        if (axiosError.response.data.status === 400) {
+          setErrors(axiosError.response.data.validationErrors);
+        }else {
+            setGeneralError(axiosError.response.data.message)
+        }
+      } else {
+        setGeneralError(t("generalError"));
+      }
+    } finally {
+      setApiProgress(false);
+    }
   };
+
+  const passwordRepeatError = useMemo(() => {
+    if (passwordRepeat && password !== passwordRepeat) {
+      return t("passwordMismatch");
+    }
+    return "";
+  }, [password, passwordRepeat]);
 
   return (
     <div className="container mt-5">
       <div className="col-lg-6 offset-lg-3">
         <form className="card">
           <div className="text-center card-header">
-            <h1> Sign Up </h1>
+            <h1> {t("signUp")} </h1>
           </div>
           <div className="card-body">
-            <div className="mb-3">
-              <label htmlFor="username" className="form-label">
-                Username
-              </label>
-              <input
-                id="username"
-                className="form-control"
-                onChange={(event) => setUsername(event.target.value)}
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="email" className="form-label">
-                E-mail
-              </label>
-              <input
-                id="email"
-                className="form-control"
-                onChange={(event) => setEmail(event.target.value)}
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="password" className="form-label">
-                Password
-              </label>
-              <input
-                id="password"
-                type="password"
-                className="form-control"
-                onChange={(event) => setPassword(event.target.value)}
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="paswordRepeat" className="form-label">
-                Password Repeat
-              </label>
-              <input
-                id="paswordRepeat"
-                type="password"
-                className="form-control"
-                onChange={(event) => setPasswordRepeat(event.target.value)}
-              />
-            </div>
+            <Input
+              id="username"
+              label={t("username")}
+              error={errors.username}
+              onChange={(event) => setUsername(event.target.value)}
+            />
+            <Input
+              id="email"
+              label={t("email")}
+              error={errors.email}
+              onChange={(event) => setEmail(event.target.value)}
+            />
+            <Input
+              id="password"
+              label={t("password")}
+              type="password"
+              error={errors.password}
+              onChange={(event) => setPassword(event.target.value)}
+            />
+            <Input
+              id="passwordRepeat"
+              label={t("passwordRepeat")}
+              type="password"
+              error={passwordRepeatError}
+              onChange={(event) => setPasswordRepeat(event.target.value)}
+            />
+
             <div className="text-center">
               {successMessage && (
-                <div className="alert alert-success">{successMessage}</div>
+                <Alert>{successMessage}</Alert>
+              )}
+              {generalError && (
+                <Alert styleType={"danger"}>{generalError}</Alert>
               )}
               <button
                 className="btn btn-primary"
@@ -85,12 +123,9 @@ export function SignUp() {
                 onClick={onSubmit}
               >
                 {apiProgress && (
-                  <span
-                    className="spinner-border spinner-border-sm"
-                    aria-hidden="true"
-                  ></span>
+                  <Spinner sm />
                 )}
-                Submit
+                {t("signUp")}
               </button>
             </div>
           </div>
