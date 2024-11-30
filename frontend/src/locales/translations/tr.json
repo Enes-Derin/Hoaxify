@@ -1,0 +1,10 @@
+{
+  "signUp": "Kayit Ol",
+  "username": "Kullanici Adi",
+  "email": "E-posta",
+  "password": "Sifre",
+  "passwordRepeat": "Sifre Tekrari",
+  "passwordMismatch": "Sifreniz Eslesmiyor",
+  "generalError": "Beklenmedik bir hata oluştu. Lütfen daha sonra tekrar deneyiniz.",
+  "login": "Giris Yap"
+}

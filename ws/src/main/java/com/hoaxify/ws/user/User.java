@@ -1,5 +1,6 @@
 package com.hoaxify.ws.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hoaxify.ws.user.validation.UniqueEmail;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -18,7 +19,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity()
-@Table(name="users", uniqueConstraints = @UniqueConstraint(columnNames = {"email"}))
+@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = {"email"}))
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,13 +27,16 @@ public class User {
 
     private String username;
 
-
     private String email;
 
-
+    @JsonIgnore
     private String password;
+    @JsonIgnore
 
-    private boolean active = false ;
+    private boolean active = false;
+    @JsonIgnore
 
     private String activationToken;
+
+    private String image;
 }

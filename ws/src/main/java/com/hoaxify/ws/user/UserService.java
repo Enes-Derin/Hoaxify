@@ -4,6 +4,7 @@ import com.hoaxify.ws.email.EmailService;
 import com.hoaxify.ws.user.exception.ActivationNotificationException;
 import com.hoaxify.ws.user.exception.InvalidTokenException;
 import com.hoaxify.ws.user.exception.NotUniqueEmailException;
+import com.hoaxify.ws.user.exception.UserNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -56,5 +58,14 @@ public class UserService {
 
     public Page<User> getAllUsers(Pageable page) {
         return this.userRepository.findAll(page);
+    }
+
+    public User getUser(int id) {
+        Optional<User> indb =this.userRepository.findById(id);
+        if (indb.isPresent()) {
+            return indb.get();
+        }else {
+            throw new UserNotFoundException(id);
+        }
     }
 }

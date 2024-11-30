@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { signup } from "./components/api";
-import { Input } from "./components/Input";
+import { signup } from "./api";
+import { Input } from "../../shared/components/Input";
 import { useTranslation } from "react-i18next";
 import { Alert } from "../../shared/components/Alert";
 import { Spinner } from "../../shared/components/Spinner";
+import { Button } from "../../shared/components/Button";
 
 export function SignUp() {
   const [username, setUsername] = useState();
@@ -55,8 +56,8 @@ export function SignUp() {
       if (axiosError.response?.data) {
         if (axiosError.response.data.status === 400) {
           setErrors(axiosError.response.data.validationErrors);
-        }else {
-            setGeneralError(axiosError.response.data.message)
+        } else {
+          setGeneralError(axiosError.response.data.message);
         }
       } else {
         setGeneralError(t("generalError"));
@@ -76,7 +77,7 @@ export function SignUp() {
   return (
     <div className="container mt-5">
       <div className="col-lg-6 offset-lg-3">
-        <form className="card">
+        <form className="card" onSubmit={onSubmit}>
           <div className="text-center card-header">
             <h1> {t("signUp")} </h1>
           </div>
@@ -109,24 +110,16 @@ export function SignUp() {
             />
 
             <div className="text-center">
-              {successMessage && (
-                <Alert>{successMessage}</Alert>
-              )}
+              {successMessage && <Alert>{successMessage}</Alert>}
               {generalError && (
                 <Alert styleType={"danger"}>{generalError}</Alert>
               )}
-              <button
-                className="btn btn-primary"
-                disabled={
-                  apiProgress || !password || password !== passwordRepeat
-                }
-                onClick={onSubmit}
+              <Button
+                disabled={!password || password !== passwordRepeat}
+                apiProgress={apiProgress}
               >
-                {apiProgress && (
-                  <Spinner sm />
-                )}
                 {t("signUp")}
-              </button>
+              </Button>
             </div>
           </div>
         </form>
