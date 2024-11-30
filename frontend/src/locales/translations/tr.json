@@ -6,5 +6,7 @@
   "passwordRepeat": "Sifre Tekrari",
   "passwordMismatch": "Sifreniz Eslesmiyor",
   "generalError": "Beklenmedik bir hata oluştu. Lütfen daha sonra tekrar deneyiniz.",
-  "login": "Giris Yap"
+  "login": "Giris Yap",
+  "userList": "Kullanici Listesi",
+  "next":"Bir Sonraki"
 }

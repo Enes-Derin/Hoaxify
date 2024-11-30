@@ -3,7 +3,6 @@ import { signup } from "./api";
 import { Input } from "../../shared/components/Input";
 import { useTranslation } from "react-i18next";
 import { Alert } from "../../shared/components/Alert";
-import { Spinner } from "../../shared/components/Spinner";
 import { Button } from "../../shared/components/Button";
 
 export function SignUp() {

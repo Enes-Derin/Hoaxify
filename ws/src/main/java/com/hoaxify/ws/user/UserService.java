@@ -68,4 +68,8 @@ public class UserService {
             throw new UserNotFoundException(id);
         }
     }
+
+    public User getUserByEmail(String email) {
+        return this.userRepository.findByEmail(email);
+    }
 }
