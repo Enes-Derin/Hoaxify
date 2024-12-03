@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "../../shared/components/Button";
 import { login } from "./api";
 
-export function Login({loginSuccess}) {
+export function Login({onLoginSuccess}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [apiProgress, setApiProgress] = useState(false);
@@ -33,6 +33,7 @@ export function Login({loginSuccess}) {
     setGeneralError(null);
     try {
       const response = await login({email,password});
+      onLoginSuccess(response.data.user)
     } catch (axiosError) {
       if (axiosError.response?.data) {
         if (axiosError.response.data.status === 400) {

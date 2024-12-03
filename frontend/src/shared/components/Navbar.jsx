@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import logo from "../../assets/hoaxify.png";
 
-export function Navbar() {
+export function Navbar({ authState }) {
   const { t } = useTranslation();
 
   return (
@@ -13,16 +13,32 @@ export function Navbar() {
             <img src={logo} width={60} /> Hoaxify
           </Link>
           <ul className="navbar-nav">
-          <li className="nav-item">
-              <Link className="nav-link" to={"/login"}>
-                {t("login")}
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to={"/signup"}>
-                {t("signUp")}
-              </Link>
-            </li>
+            {authState.id === 0 && (
+              <>
+                <li className="nav-item">
+                  <Link className="nav-link" to={"/login"}>
+                    {t("login")}
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to={"/signup"}>
+                    {t("signUp")}
+                  </Link>
+                </li>
+              </>
+            )}
+            {authState.id > 0 && (
+              <>
+                <li className="nav-item">
+                  <Link className="nav-link" to={`/myprofile/${authState.id}`}>
+                    My Profile
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <span className="nav-link" role="button">Logout</span>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </nav>
